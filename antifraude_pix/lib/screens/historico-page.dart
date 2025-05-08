@@ -11,13 +11,20 @@ class HistoricoPage extends StatefulWidget {
 
 class _HistoricoPageState extends State<HistoricoPage> {
   String _search = "";
+  String? _statusFiltro;
+  String? _dataFiltro;
+  bool _ordemCrescente = true;
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<hp.HistoricoProvider>(context);
-    final resultados = _search.isEmpty
-        ? provider.itens
-        : provider.pesquisar(_search);
+    final resultados = provider.aplicarFiltros(
+      search: _search,
+      status: _statusFiltro,
+      data: _dataFiltro,
+      ordemCrescente: _ordemCrescente,
+    );
+
 
     return Scaffold(
       backgroundColor: const Color(0xFFF1F5F6),
@@ -47,6 +54,15 @@ class _HistoricoPageState extends State<HistoricoPage> {
                 fillColor: Colors.white,
                 hintText: 'Pesquisar',
                 prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.filter_list),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      builder: (_) => _buildFiltroSheet(),
+                    );
+                  },
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                   borderSide: BorderSide.none,
@@ -109,6 +125,58 @@ class _HistoricoPageState extends State<HistoricoPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildFiltroSheet() {
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text(
+          'Filtros',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        DropdownButton<String>(
+          hint: const Text('Filtrar por status'),
+          value: _statusFiltro,
+          items: ['Em análise', 'Concluída', 'Em andamento']
+              .map((status) => DropdownMenuItem(
+                    value: status,
+                    child: Text(status),
+                  ))
+              .toList(),
+          onChanged: (value) {
+            setState(() {
+              _statusFiltro = value;
+            });
+            Navigator.pop(context); // fecha o bottom sheet
+          },
+        ),
+        TextField(
+          decoration: const InputDecoration(
+            labelText: 'Filtrar por data (dd/MM/yyyy)',
+          ),
+          onChanged: (value) {
+            setState(() {
+              _dataFiltro = value;
+            });
+          },
+        ),
+        const SizedBox(height: 10),
+        ElevatedButton.icon(
+          onPressed: () {
+            setState(() {
+              _ordemCrescente = !_ordemCrescente;
+            });
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.sort),
+          label: Text(_ordemCrescente ? 'Data Crescente' : 'Data Decrescente'),
+          ),
+        ],
       ),
     );
   }

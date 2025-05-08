@@ -1,3 +1,4 @@
+import 'package:antifraude_pix/screens/pix-screens/chave-pix-page.dart';
 import 'package:flutter/material.dart';
 import 'notificacoes-page.dart';
 import 'historico-page.dart';
@@ -39,6 +40,7 @@ class HomePage extends StatelessWidget {
                     _buildBlock('assets/icons/clock-clockwise-bold.png', "Histórico de Denúncias", context, HistoricoPage()),
                     _buildBlock('assets/icons/note-bold.png', "Protocolos", context, ProtocoloPage()),
                     _buildBlock('assets/icons/pix-logo-bold.png', "MED Pix", context, MedPixPage()),
+                    _buildBlock('assets/icons/currency-dollar-bold.png', "Pix", context, PixPage()),
                   ],
                 ),
               ),
