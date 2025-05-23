@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
+import 'package:antifraude_pix/screens/pix-screens/devolucao-pix-page.dart';
 
 class ValorPixPage extends StatefulWidget {
   const ValorPixPage({super.key});
@@ -209,24 +210,32 @@ void _showConfirmDialog(BuildContext context) {
         actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         actionsAlignment: MainAxisAlignment.spaceEvenly,
         actions: [
-          // botão Continuar desabilitado
+          // botão Cancelar
           TextButton(
-            onPressed: null, // null = desabilitado
+            onPressed: () => Navigator.pop(context),
             style: TextButton.styleFrom(
               backgroundColor: Colors.grey.shade300,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
-            child: const Text('Continuar', style: TextStyle(color: Colors.white)),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.white)),
           ),
 
-          // botão Cancelar
+          // botão Devolução
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () async {
+              Navigator.of(context); // Para fechar o pop-up modal
+
+              await Future.delayed(Duration.zero);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DevolucaoPixPage()), // Substitua por sua tela
+              );
+            },
             style: TextButton.styleFrom(
               backgroundColor: const Color(0xFF0BBF6B),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             ),
-            child: const Text('Cancelar', style: TextStyle(color: Colors.white)),
+            child: const Text('Devolução', style: TextStyle(color: Colors.white)),
           ),
         ],
       );
