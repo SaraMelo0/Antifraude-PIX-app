@@ -105,7 +105,7 @@ class _DevolucaoPixPageState extends State<DevolucaoPixPage> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Dropdown de motivo
+                  // dropdown de motivo
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
@@ -132,6 +132,8 @@ class _DevolucaoPixPageState extends State<DevolucaoPixPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // campo personalizado
                   Visibility(
                     visible: _mostrarCampoPersonalizado,
                     child: Column(
@@ -159,7 +161,8 @@ class _DevolucaoPixPageState extends State<DevolucaoPixPage> {
                   ),
 
                   const SizedBox(height: 16),
-                  // Mensagem de alerta para casos de fraude
+
+                  // alerta de fraude
                   Visibility(
                     visible: _motivoSelecionado == 'Transação fraudulenta (suspeita)' ||
                             _motivoSelecionado == 'Transação fraudulenta (confirmada)',
@@ -187,6 +190,8 @@ class _DevolucaoPixPageState extends State<DevolucaoPixPage> {
               ),
             ),
           ),
+
+          // Botões
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
             child: Row(
@@ -194,7 +199,39 @@ class _DevolucaoPixPageState extends State<DevolucaoPixPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      // ação continuar
+                      final valorTexto = _valorController.text;
+                      final motivo = _motivoSelecionado;
+                      final motivoPersonalizado = _motivoPersonalizadoController.text.trim();
+
+                      if (valorTexto.isEmpty || valorTexto == 'R\$ 0,00') {
+                        _mostrarDialogoErro(context, 'Informe um valor válido para devolução.');
+                        return;
+                      }
+
+                      if (motivo == null) {
+                        _mostrarDialogoErro(context, 'Selecione um motivo para a devolução.');
+                        return;
+                      }
+
+                      if (motivo == 'Outro (especificar)' && motivoPersonalizado.isEmpty) {
+                        _mostrarDialogoErro(context, 'Especifique o motivo da devolução.');
+                        return;
+                      }
+
+                      // aqui vai a chamada real de backend ou API (simulada abaixo)
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text('Sucesso'),
+                          content: const Text('Devolução realizada com sucesso.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF0BBF6B),
@@ -210,7 +247,7 @@ class _DevolucaoPixPageState extends State<DevolucaoPixPage> {
                 Expanded(
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pop(context); // fecha o pop-up
+                      Navigator.pop(context);
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.grey.shade400,
@@ -224,6 +261,22 @@ class _DevolucaoPixPageState extends State<DevolucaoPixPage> {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _mostrarDialogoErro(BuildContext context, String mensagem) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Erro'),
+        content: Text(mensagem),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
           ),
         ],
       ),
