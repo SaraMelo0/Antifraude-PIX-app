@@ -1,5 +1,6 @@
 import 'package:antifraude_pix/screens/med-pix-page.dart';
 import 'package:antifraude_pix/screens/pix-screens/chave-pix-page.dart';
+import 'package:antifraude_pix/screens/pix-screens/devolucao-pix-page.dart';
 import 'package:antifraude_pix/screens/pix-screens/valor-pix-page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +42,7 @@ class App extends StatelessWidget {
           '/MedPix': (context) => MedPixPage(),
           '/Pix': (context) => PixPage(),
           'ValorPix': (context) => ValorPixPage(),
+          'DevolucaoPix': (context) => DevolucaoPixPage(),
         },
       ),
     );
